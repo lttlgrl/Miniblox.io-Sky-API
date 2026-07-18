@@ -296,6 +296,6 @@ Send me a DM on Discord @trustisover, or you can join our community server https
 
 There's still a lot left to discover about Miniblox.io's sky renderer.
 
-If you find something interesting, whether it's support for cubemaps, the legacy (Atmospheric Sky OFF) renderer, hidden shader features, or anything else—feel free to contribute!
+If you find something interesting, whether it's support for cubemaps, the legacy (Atmospheric Sky OFF) renderer, hidden shader features, or anything else, feel free to contribute!
 
 Open a pull request, submit an issue, or share your findings with me so they can be added to the API for everyone to use!
