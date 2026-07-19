@@ -286,7 +286,7 @@ SkyAPI.setDayFactor(1);
 
 ## Notes
 
-The Atmospheric Sky API is built directly on top of MiniBlox's internal Three.js `ShaderMaterial`, allowing runtime modification of the sky without modifying the game's source code.
+The Atmospheric Sky API is built directly on top of Miniblox's internal Three.js `ShaderMaterial`, allowing runtime modification of the sky without modifying the game's source code.
 
 Support for the legacy sky renderer (Atmospheric Sky disabled) is planned for a future release.
 
