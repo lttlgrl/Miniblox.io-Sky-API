@@ -14,4 +14,4 @@ A lightweight runtime API for accessing and modifying Miniblox.io's sky shader
 
 If you use this project in your own Miniblox mod / script, attribution is appreciated:
 
-Created by **TrustIsOver** ❤️
+Created by trust ❤️
