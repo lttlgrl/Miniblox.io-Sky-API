@@ -292,7 +292,7 @@ Support for the legacy sky renderer (Atmospheric Sky disabled) is planned for a 
 
 ## Reach Out
 
-Send me a DM on Discord @trustisover, or you can join our community server https://dsc.gg/unverifiedv2
+Send me a Friend Request and DM on Discord @hackclient, or you can join our community server https://dsc.gg/unverifiedv2
 
 There's still a lot left to discover about Miniblox.io's sky renderer.
 
