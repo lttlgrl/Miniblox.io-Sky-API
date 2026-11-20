@@ -5,15 +5,13 @@ const SkyAPI = (() => {
     if (!game)
         throw new Error("Miniblox game not found.");
 
+    const PRESET_BASE = "https://raw.githubusercontent.com/lttlgrl/Miniblox.io-Sky-API/main/skies/";
+
     const gameScene = game.gameScene;
     const sky = gameScene.sky;
     const atmosphere = sky.atmosphere;
     const material = atmosphere.material;
 
-    // ------------------------------------------------------------------
-    // Three.js classes, borrowed from objects the game already created
-    // (Miniblox bundles Three.js, so there is no global THREE).
-    // ------------------------------------------------------------------
     const Mesh = atmosphere.constructor;
     const ShaderMaterial = material.constructor;
     const SphereGeometry = atmosphere.geometry.constructor;
@@ -26,7 +24,6 @@ const SkyAPI = (() => {
             Texture = o.material.map.constructor;
     });
 
-    // Three.js constants (stable across versions)
     const LinearFilter = 1006;
     const ClampToEdgeWrapping = 1001;
     const RepeatWrapping = 1000;
@@ -36,12 +33,6 @@ const SkyAPI = (() => {
     const OneMinusSrcAlphaFactor = 205;
     const BackSide = 1;
 
-    // ------------------------------------------------------------------
-    // Skybox shader. Supports a six-face cube ("cube") or a single
-    // equirectangular panorama ("equirect").
-    // Face order matches Three.js CubeTextureLoader:
-    //   [px, nx, py, ny, pz, nz] = [right, left, top, bottom, front, back]
-    // ------------------------------------------------------------------
     const skyboxVertex = `
 varying vec3 vDir;
 
@@ -59,15 +50,14 @@ uniform sampler2D faceNY;
 uniform sampler2D facePZ;
 uniform sampler2D faceNZ;
 uniform sampler2D panorama;
-uniform float mode;        // 0 = cube, 1 = equirect
-uniform float rotation;    // radians around the Y axis
-uniform float brightness;  // final brightness multiplier
+uniform float mode;
+uniform float rotation;
+uniform float brightness;
 uniform vec3 tint;
 uniform float opacity;
 varying vec3 vDir;
 
 vec3 sampleCube(vec3 d) {
-    // Mirror X so faces line up the same way as Three.js scene.background.
     d.x = -d.x;
     vec3 a = abs(d);
     vec2 uv;
@@ -139,7 +129,6 @@ void main() {
         return tex;
     }
 
-    // Accepts a URL, data URL, File/Blob, <img>, <canvas>, ImageBitmap.
     function loadImage(source) {
         if (source instanceof HTMLCanvasElement ||
             (typeof ImageBitmap !== "undefined" && source instanceof ImageBitmap))
@@ -176,6 +165,20 @@ void main() {
         });
     }
 
+    function downscale(img, maxSize) {
+        const w = img.naturalWidth || img.width;
+        const h = img.naturalHeight || img.height;
+        if (!maxSize || (w <= maxSize && h <= maxSize)) return img;
+        const k = maxSize / Math.max(w, h);
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(w * k);
+        canvas.height = Math.round(h * k);
+        const ctx = canvas.getContext("2d");
+        ctx.imageSmoothingQuality = "high";
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        return canvas;
+    }
+
     const skyboxUniforms = {
         facePX: { value: null },
         faceNX: { value: null },
@@ -191,25 +194,28 @@ void main() {
         opacity: { value: 1 }
     };
 
-    let skybox = null;          // the Mesh, created on first use
+    let skybox = null;
     let skyboxTextures = [];
-    let originalUpdate = null;  // sky.update before we wrapped it
+    let originalUpdate = null;
     let lastFrame = performance.now();
+    let currentPreset = null;
 
-    const skyboxOptions = {
-        rotation: 0,            // degrees
-        rotationSpeed: 0,       // degrees per second
+    const defaultOptions = {
+        rotation: 0,
+        rotationSpeed: 0,
         brightness: 1,
         tint: [1, 1, 1],
-        dayNight: true,         // dim the skybox at night
-        nightBrightness: 0.25,  // brightness at midnight when dayNight is on
-        blend: "always",        // "always" | "night" (fade in at night only)
+        dayNight: true,
+        nightBrightness: 0.25,
+        blend: "always",
         hideSun: false,
         hideMoon: false,
         hideStars: false,
         hideClouds: false,
-        fogColor: null          // [r, g, b] 0-1 to override fog color, or null
+        fogColor: null
     };
+
+    const skyboxOptions = Object.assign({}, defaultOptions);
 
     function ensureSkyboxMesh() {
         if (skybox) return skybox;
@@ -230,8 +236,6 @@ void main() {
             fog: false,
             transparent: false
         });
-        // Alpha blending while staying in the opaque render list,
-        // so the skybox is still drawn before the world.
         mat.blending = CustomBlending;
         mat.blendEquation = AddEquation;
         mat.blendSrc = SrcAlphaFactor;
@@ -239,7 +243,7 @@ void main() {
 
         skybox = new Mesh(new SphereGeometry(4900, 32, 16), mat);
         skybox.name = "SkyAPI.skybox";
-        skybox.renderOrder = -0.5;    // right after the game's atmosphere (-1)
+        skybox.renderOrder = -0.5;
         skybox.frustumCulled = false;
         skybox.visible = false;
         gameScene.ambientMeshes.add(skybox);
@@ -254,7 +258,6 @@ void main() {
 
     const camPos = new Vector3();
 
-    // Runs every frame, right after the game's own sky.update().
     function applySkybox() {
         const now = performance.now();
         const dt = Math.min(0.25, (now - lastFrame) / 1000);
@@ -274,10 +277,8 @@ void main() {
         skyboxUniforms.tint.value.setRGB(o.tint[0], o.tint[1], o.tint[2]);
 
         if (o.blend === "night") {
-            // Leave the game's sky as-is and fade the skybox in as night falls.
             skyboxUniforms.opacity.value = 1 - day;
         } else {
-            // Replace the game's sky completely.
             skyboxUniforms.opacity.value = 1;
             atmosphere.visible = false;
             gameScene.scene.background = null;
@@ -311,7 +312,6 @@ void main() {
 
     function unhookSkyUpdate() {
         if (!originalUpdate) return;
-        // Remove our instance override so the prototype method runs again.
         if (Object.prototype.hasOwnProperty.call(sky, "update")) delete sky.update;
         if (sky.update !== originalUpdate) sky.update = originalUpdate;
         originalUpdate = null;
@@ -336,7 +336,58 @@ void main() {
         Object.assign(skyboxOptions, options);
         if (options.tint && !Array.isArray(options.tint))
             skyboxOptions.tint = [options.tint.r, options.tint.g, options.tint.b];
-        if (hadHidden) restoreHidden(); // re-applied next frame if still hidden
+        if (hadHidden) restoreHidden();
+    }
+
+    function resetOptions(options) {
+        const rotation = skyboxOptions.rotation;
+        Object.assign(skyboxOptions, defaultOptions, { rotation });
+        restoreHidden();
+        setOptions(options);
+    }
+
+    async function applyCube(images, options) {
+        ensureSkyboxMesh();
+        disposeTextures();
+        skyboxTextures = images.map((img) => makeTexture(img, false));
+        ["facePX", "faceNX", "facePY", "faceNY", "facePZ", "faceNZ"]
+            .forEach((key, i) => (skyboxUniforms[key].value = skyboxTextures[i]));
+        skyboxUniforms.mode.value = 0;
+        setOptions(options);
+        hookSkyUpdate();
+    }
+
+    async function applyPanorama(img, options) {
+        ensureSkyboxMesh();
+        disposeTextures();
+        const tex = makeTexture(img, true);
+        skyboxTextures = [tex];
+        skyboxUniforms.panorama.value = tex;
+        skyboxUniforms.mode.value = 1;
+        setOptions(options);
+        hookSkyUpdate();
+    }
+
+    async function loadPack(baseUrl, settings = {}) {
+        if (!baseUrl.endsWith("/")) baseUrl += "/";
+        const res = await fetch(baseUrl + "sky.json", { cache: "no-cache" });
+        if (!res.ok) throw new Error("SkyAPI: no sky.json at " + baseUrl);
+        const pack = await res.json();
+        const maxSize = settings.size || 0;
+        const options = Object.assign({}, pack.options, settings.options);
+
+        if (pack.type === "panorama" || pack.type === "equirect") {
+            const img = downscale(await loadImage(baseUrl + pack.image), maxSize * 4);
+            resetOptions();
+            await applyPanorama(img, options);
+        } else {
+            const names = pack.faces || ["px", "nx", "py", "ny", "pz", "nz"].map((f) => f + ".webp");
+            const images = await Promise.all(names.map((n) => loadImage(baseUrl + n)));
+            resetOptions();
+            await applyCube(images.map((img) => downscale(img, maxSize)), options);
+        }
+
+        return pack;
     }
 
     return {
@@ -344,6 +395,7 @@ void main() {
         atmosphere,
         material,
         uniforms: material.uniforms,
+        presetBase: PRESET_BASE,
 
         get shader() {
             return material;
@@ -397,15 +449,6 @@ void main() {
             material.needsUpdate = true;
         },
 
-        // --------------------------------------------------------------
-        // Custom skyboxes
-        // --------------------------------------------------------------
-
-        /**
-         * Six-face skybox. faces = [right, left, top, bottom, front, back]
-         * (px, nx, py, ny, pz, nz) or an object with those keys.
-         * Each face can be a URL, data URL, File/Blob, <img> or <canvas>.
-         */
         async setSkybox(faces, options) {
             if (!Array.isArray(faces))
                 faces = [faces.px, faces.nx, faces.py, faces.ny, faces.pz, faces.nz];
@@ -413,40 +456,16 @@ void main() {
                 throw new Error("setSkybox needs 6 faces: [px, nx, py, ny, pz, nz]");
 
             const images = await Promise.all(faces.map(loadImage));
-            ensureSkyboxMesh();
-            disposeTextures();
-            skyboxTextures = images.map((img) => makeTexture(img, false));
-
-            ["facePX", "faceNX", "facePY", "faceNY", "facePZ", "faceNZ"]
-                .forEach((key, i) => (skyboxUniforms[key].value = skyboxTextures[i]));
-            skyboxUniforms.mode.value = 0;
-
-            setOptions(options);
-            hookSkyUpdate();
+            currentPreset = null;
+            await applyCube(images, options);
         },
 
-        /**
-         * Single equirectangular (360° panorama, 2:1) image.
-         */
         async setPanorama(source, options) {
             const img = await loadImage(source);
-            ensureSkyboxMesh();
-            disposeTextures();
-            const tex = makeTexture(img, true);
-            skyboxTextures = [tex];
-
-            skyboxUniforms.panorama.value = tex;
-            skyboxUniforms.mode.value = 1;
-
-            setOptions(options);
-            hookSkyUpdate();
+            currentPreset = null;
+            await applyPanorama(img, options);
         },
 
-        /**
-         * Opens a file picker. Choose 1 image for a panorama,
-         * or 6 images for a cube (named px/nx/py/ny/pz/nz,
-         * right/left/top/bottom/front/back, or picked in that order).
-         */
         pickSkyboxFiles(options) {
             return new Promise((resolve, reject) => {
                 const input = document.createElement("input");
@@ -460,9 +479,9 @@ void main() {
                             await this.setPanorama(files[0], options);
                         } else if (files.length === 6) {
                             const order = [
-                                ["px", "right", "posx"], ["nx", "left", "negx"],
-                                ["py", "top", "up", "posy"], ["ny", "bottom", "down", "negy"],
-                                ["pz", "front", "posz"], ["nz", "back", "negz"]
+                                ["px", "right", "posx", "rt"], ["nx", "left", "negx", "lf"],
+                                ["py", "top", "up", "posy"], ["ny", "bottom", "down", "negy", "dn"],
+                                ["pz", "front", "posz", "ft"], ["nz", "back", "negz", "bk"]
                             ];
                             const name = (f) => f.name.toLowerCase().replace(/\.[^.]+$/, "");
                             const matched = order.map((names) =>
@@ -483,7 +502,29 @@ void main() {
             });
         },
 
-        /** Change skybox settings at any time, e.g. { rotationSpeed: 2 }. */
+        async listPresets() {
+            const res = await fetch(PRESET_BASE + "index.json", { cache: "no-cache" });
+            if (!res.ok) throw new Error("SkyAPI: couldn't load the preset list");
+            const list = await res.json();
+            return list.map((p) => Object.assign({}, p, { preview: PRESET_BASE + p.preview }));
+        },
+
+        async loadPreset(id, settings) {
+            const pack = await loadPack(PRESET_BASE + id + "/", settings);
+            currentPreset = id;
+            return pack;
+        },
+
+        async loadSkyPack(url, settings) {
+            const pack = await loadPack(url, settings);
+            currentPreset = url;
+            return pack;
+        },
+
+        get currentPreset() {
+            return currentPreset;
+        },
+
         setSkyboxOptions(options) {
             setOptions(options);
         },
@@ -496,12 +537,12 @@ void main() {
             return skybox;
         },
 
-        /** Remove the custom skybox and give the game its normal sky back. */
         removeSkybox() {
             unhookSkyUpdate();
             if (skybox) skybox.visible = false;
             disposeTextures();
             restoreHidden();
+            currentPreset = null;
         }
     };
 })();
