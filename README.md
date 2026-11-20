@@ -14,7 +14,7 @@ See [api.md](api.md) for the full API and auto-loading with Tampermonkey.
 
 
 ## Features
-- In-game sky menu: presets, upload your own, on/off switch and settings
+- **Sky Client**: an in-game menu with skies, client-side weather and time, lightning, aurora, shooting stars, ambient particles, color filters, block outline, kill and hit effects, chat tools, auto GG, skybox capture, a sky editor, profiles, share codes, keybinds and a music player
 - Access the game's sky ShaderMaterial
 - Read and modify shader uniforms
 - Change sky colors in real time
