@@ -1,10 +1,3 @@
-// Procedural galaxy skybox for the Miniblox.io Sky API.
-// Load installation.js first, then run this file.
-// Everything is generated in the browser - no images to download.
-//
-//   SkyboxGalaxy.apply();                       // default galaxy
-//   SkyboxGalaxy.apply({ seed: 7 });            // different galaxy
-//   SkyboxGalaxy.apply({ hue: "warm" }, { blend: "night" });
 const SkyboxGalaxy = (() => {
     const PALETTES = {
         cosmic: [[0.38, 0.10, 0.55], [0.10, 0.22, 0.62], [0.05, 0.45, 0.50], [0.65, 0.15, 0.42]],
@@ -53,8 +46,6 @@ const SkyboxGalaxy = (() => {
         return { noise, fbm };
     }
 
-    // Direction for pixel (s, t) of each face, matching SkyAPI.setSkybox's face order
-    // [px, nx, py, ny, pz, nz]. sc/tc are in -1..1, t goes top -> bottom.
     const FACE_DIRS = [
         (sc, tc) => [-1, -tc, -sc],
         (sc, tc) => [1, -tc, sc],
@@ -75,7 +66,6 @@ const SkyboxGalaxy = (() => {
         const { fbm } = makeNoise(seed);
         let bs = seed * 97 + 13;
         const brand = () => ((bs = (bs * 1664525 + 1013904223) >>> 0) / 4294967296);
-        // Tilted galactic plane
         let bn = [brand() - 0.5, 1.2, brand() - 0.5];
         const bl = Math.hypot(...bn);
         bn = bn.map((v) => v / bl);
@@ -83,7 +73,6 @@ const SkyboxGalaxy = (() => {
         const faces = [];
 
         for (let f = 0; f < 6; f++) {
-            // ---- low-res nebula layer (smooth, upscaled later) ----
             const neb = document.createElement("canvas");
             neb.width = neb.height = lowRes;
             const nctx = neb.getContext("2d");
@@ -97,20 +86,17 @@ const SkyboxGalaxy = (() => {
                     const l = Math.hypot(dx, dy, dz);
                     dx /= l; dy /= l; dz /= l;
 
-                    // nebula clouds
                     const n1 = fbm(dx * 2.2 + 10, dy * 2.2, dz * 2.2, 5);
                     const n2 = fbm(dx * 1.3, dy * 1.3 + 20, dz * 1.3, 3);
                     let cloud = Math.max(0, n1 - 0.42) * 2.6;
                     cloud = cloud * cloud * nebulaStrength;
 
-                    // galactic band
                     const bd = dx * bn[0] + dy * bn[1] + dz * bn[2];
                     const band = Math.exp(-(bd * bd) / 0.02);
                     const dust = fbm(dx * 6, dy * 6 + 5, dz * 6, 4);
                     const bandGlow = band * (0.35 + 0.65 * fbm(dx * 3, dy * 3, dz * 3 + 7, 4)) *
                         (1 - Math.max(0, dust - 0.45) * 2.2);
 
-                    // pick palette colors by a slow noise
                     const ci = Math.min(2.999, Math.max(0, (n2 - 0.25) * 6));
                     const i0 = Math.floor(ci), t = ci - i0;
                     const c0 = palette[i0], c1 = palette[(i0 + 1) % palette.length];
@@ -131,7 +117,6 @@ const SkyboxGalaxy = (() => {
             }
             nctx.putImageData(nimg, 0, 0);
 
-            // ---- full-res face: upscale the smooth nebula ----
             const face = document.createElement("canvas");
             face.width = face.height = size;
             const ctx = face.getContext("2d");
@@ -141,7 +126,6 @@ const SkyboxGalaxy = (() => {
             faces.push(face);
         }
 
-        // ---- stars: random directions, drawn as soft dots on every face they touch ----
         const ctxs = faces.map((c) => {
             const x = c.getContext("2d");
             x.globalCompositeOperation = "lighter";
@@ -158,13 +142,11 @@ const SkyboxGalaxy = (() => {
             const count = Math.round(L.count * starDensity);
             let drawn = 0, guard = 0;
             while (drawn < count && guard++ < count * 6) {
-                // uniform random direction
                 const z = brand() * 2 - 1;
                 const a = brand() * Math.PI * 2;
                 const rr = Math.sqrt(1 - z * z);
                 const w = [rr * Math.cos(a), z, rr * Math.sin(a)];
 
-                // denser inside the galactic band
                 const bd = w[0] * bn[0] + w[1] * bn[1] + w[2] * bn[2];
                 if (brand() > 0.35 + 0.65 * Math.exp(-(bd * bd) / 0.03)) continue;
                 drawn++;
@@ -174,7 +156,6 @@ const SkyboxGalaxy = (() => {
                 const col = temp < 0.25 ? "190,215,255" : temp > 0.85 ? "255,210,150" : "255,255,255";
                 const radius = L.radius * k * (0.7 + 0.6 * brand());
 
-                // world dir -> GL cube direction (SkyAPI mirrors X)
                 const gx = -w[0], gy = w[1], gz = w[2];
                 const proj = [
                     [gx, -gz, -gy], [-gx, gz, -gy],
@@ -208,14 +189,8 @@ const SkyboxGalaxy = (() => {
     return {
         palettes: Object.keys(PALETTES),
 
-        /** Returns 6 canvases [px, nx, py, ny, pz, nz]. */
         generate,
 
-        /**
-         * Generate and apply.
-         * genOptions: { seed, size, hue: "cosmic"|"warm"|"ice"|"toxic", nebula, stars }
-         * skyOptions: anything SkyAPI.setSkyboxOptions accepts.
-         */
         async apply(genOptions = {}, skyOptions = {}) {
             if (typeof SkyAPI === "undefined")
                 throw new Error("Load installation.js (SkyAPI) first.");
@@ -224,7 +199,6 @@ const SkyboxGalaxy = (() => {
             return faces;
         },
 
-        /** Download the 6 faces as PNGs (px.png, nx.png, ...). */
         download(faces) {
             ["px", "nx", "py", "ny", "pz", "nz"].forEach((name, i) => {
                 const a = document.createElement("a");
