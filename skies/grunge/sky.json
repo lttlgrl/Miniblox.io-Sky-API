@@ -1,0 +1,23 @@
+{
+  "name": "Grunge",
+  "type": "cube",
+  "faces": [
+    "px.webp",
+    "nx.webp",
+    "py.webp",
+    "ny.webp",
+    "pz.webp",
+    "nz.webp"
+  ],
+  "preview": "preview.webp",
+  "credit": "GRUNGE resource pack",
+  "options": {
+    "fogColor": [
+      0.329,
+      0.228,
+      0.291
+    ],
+    "hideStars": true,
+    "dayNight": false
+  }
+}
