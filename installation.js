@@ -215,8 +215,12 @@ void main() {
         hideMoon: false,
         hideStars: false,
         hideClouds: false,
-        fogColor: null
+        fogColor: null,
+        weatherDim: true
     };
+
+    let flashUntil = 0;
+    let flashLength = 1;
 
     const skyboxOptions = Object.assign({}, defaultOptions);
 
@@ -274,6 +278,12 @@ void main() {
         let brightness = o.brightness;
         if (o.dayNight)
             brightness *= o.nightBrightness + (1 - o.nightBrightness) * day;
+        if (o.weatherDim) {
+            let rain = 0;
+            try { rain = game.world ? game.world.getRainStrength(1) || 0 : 0; } catch (e) {}
+            brightness *= 1 - 0.45 * Math.min(1, Math.max(0, rain));
+        }
+        if (now < flashUntil) brightness *= 1 + 1.6 * ((flashUntil - now) / flashLength);
 
         skyboxUniforms.rotation.value = o.rotation * Math.PI / 180;
         skyboxUniforms.brightness.value = brightness;
@@ -541,6 +551,15 @@ void main() {
 
         get skybox() {
             return skybox;
+        },
+
+        flash(ms = 260) {
+            flashLength = ms;
+            flashUntil = performance.now() + ms;
+        },
+
+        get active() {
+            return !!(skybox && skybox.visible && originalUpdate);
         },
 
         removeSkybox() {
