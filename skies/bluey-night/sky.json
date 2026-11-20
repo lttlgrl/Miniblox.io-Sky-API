@@ -1,0 +1,23 @@
+{
+  "name": "Bluey Night",
+  "type": "cube",
+  "faces": [
+    "px.webp",
+    "nx.webp",
+    "py.webp",
+    "ny.webp",
+    "pz.webp",
+    "nz.webp"
+  ],
+  "preview": "preview.webp",
+  "credit": "Sky: Dynamic Duo Revamp by kenopacks. Bluey Nightfals pink recolor by Marb, ported by numb, recolored by krystal/mop",
+  "options": {
+    "fogColor": [
+      0.623,
+      0.506,
+      0.513
+    ],
+    "hideStars": true,
+    "dayNight": false
+  }
+}

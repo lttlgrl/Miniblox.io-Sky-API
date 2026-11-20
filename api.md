@@ -278,6 +278,16 @@ await SkyAPI.loadPreset("black");
 | `midnight` | Deep blue starry sky |
 | `moonrise` | Blue-hour sky with a rising moon |
 | `anime-night` | Purple anime-style night, bright moon |
+| `grunge` | Dark sky with pink clouds |
+| `bluey-night` | Soft pink nebula with stars |
+| `lightberry` | Anime-style power lines under a blue night sky |
+| `dayylt` | Teal aurora over a starry night |
+| `overflow-day` | Bright blue sky with clouds |
+| `overflow-night` | Deep blue night with glowing clouds |
+| `stain` | Purple space nebula |
+| `tokyo-v2` | Anime-style grayscale city |
+
+Skies from `grunge` down come from Minecraft Bedrock resource packs; each one's `sky.json` has a `credit` field.
 
 ### `SkyAPI.listPresets()`
 

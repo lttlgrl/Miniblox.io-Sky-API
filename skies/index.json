@@ -38,5 +38,45 @@
     "id": "anime-night",
     "name": "Anime Night",
     "preview": "anime-night/preview.webp"
+  },
+  {
+    "id": "grunge",
+    "name": "Grunge",
+    "preview": "grunge/preview.webp"
+  },
+  {
+    "id": "bluey-night",
+    "name": "Bluey Night",
+    "preview": "bluey-night/preview.webp"
+  },
+  {
+    "id": "lightberry",
+    "name": "Lightberry",
+    "preview": "lightberry/preview.webp"
+  },
+  {
+    "id": "dayylt",
+    "name": "Dayylt",
+    "preview": "dayylt/preview.webp"
+  },
+  {
+    "id": "overflow-day",
+    "name": "Overflow Day",
+    "preview": "overflow-day/preview.webp"
+  },
+  {
+    "id": "overflow-night",
+    "name": "Overflow Night",
+    "preview": "overflow-night/preview.webp"
+  },
+  {
+    "id": "stain",
+    "name": "Stain",
+    "preview": "stain/preview.webp"
+  },
+  {
+    "id": "tokyo-v2",
+    "name": "Tokyo V2",
+    "preview": "tokyo-v2/preview.webp"
   }
 ]

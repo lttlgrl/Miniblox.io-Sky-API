@@ -1,0 +1,23 @@
+{
+  "name": "Overflow Day",
+  "type": "cube",
+  "faces": [
+    "px.webp",
+    "nx.webp",
+    "py.webp",
+    "ny.webp",
+    "pz.webp",
+    "nz.webp"
+  ],
+  "preview": "preview.webp",
+  "credit": "Overflow pack by Yuruze, port by Reqolour",
+  "options": {
+    "fogColor": [
+      0.595,
+      0.741,
+      0.808
+    ],
+    "hideStars": true,
+    "dayNight": false
+  }
+}
