@@ -7,7 +7,7 @@ The Atmospheric Sky API provides access to Miniblox's atmospheric sky renderer, 
 
 ---
 
-## In-Game Menu (easiest)
+## Sky Client (easiest)
 
 Open miniblox.io, press **Ctrl+Shift+J** to open the console, and paste:
 
@@ -15,12 +15,34 @@ Open miniblox.io, press **Ctrl+Shift+J** to open the console, and paste:
 fetch("https://raw.githubusercontent.com/lttlgrl/Miniblox.io-Sky-API/main/gui.js").then(r => r.text()).then(eval);
 ```
 
-- Press **Right Shift** (or click the sky button in the bottom-right corner while your mouse is free) to open the menu.
-- Click a sky to apply it, or **Upload your own** (1 panorama or 6 cube faces).
-- The switch at the top turns the custom sky on and off.
-- Settings: quality, always / night only, brightness, rotation, spin speed, dim at night, night brightness, match fog, and hide sun / moon / stars / clouds.
-- Your sky and settings are saved and come back automatically next time you load the menu.
-- Change the menu key at the bottom of the menu.
+Press **Right Shift** (or click the button in the bottom-right corner while your mouse is free) to open the menu. Everything is client-side: only you see it, and nothing is sent to the server except Auto GG's message. Your settings are saved and come back on the next load.
+
+| Tab | Features |
+|-----|----------|
+| **Sky** | All presets, **My Skies** (uploads, captures and editor skies, saved in your browser, with download), on/off switch, Day & Night Skies, Sky Playlist, quality, brightness, rotation, spin, night dimming, darken during rain, fog matching, hide sun / moon / stars / clouds |
+| **World** | Weather (clear / rain / storm / snow + intensity), Lightning (random strikes, thunder, strike key), Time of Day (lock or custom cycle speed), Sun & Moon (size, color, custom images), Cloud Styler (colors, opacity, coverage, height, wind), Fog Designer (color, distance), Rain Style (color, heaviness, speed), Shooting Stars, Aurora, Ambient Particles (fireflies, dust, petals, snow) |
+| **Visuals** | Color Filter (Vibrant, Cinematic, Noir, Warm, Cold, Vaporwave, Dreamy), Block Outline (color, rainbow, thickness, glow, face tint), Break Animation Color, Kill Effects (lightning, firework, hearts, smoke), Hit Particles |
+| **Chat** | Highlights (keywords + ping), Spam Stacking (`×3`), Chat Filter (join/leave, words), Client Commands, Auto GG (custom message), searchable chat history (click to copy) |
+| **Create** | Capture a 360° skybox from where you stand, Sky Editor (gradient, glow, stars, clouds, moon) |
+| **HUD** | Session Timer: time in the current server (draggable) |
+| **Client** | Profiles, auto profile per server, share codes, keybinds for everything, music player |
+
+Every module has its own toggle key, and the search box finds any feature.
+
+### Client commands
+
+Type these in chat (prefix `.` by default). They run on your side and are never sent.
+
+| Command | Does |
+|---------|------|
+| `.help` | List commands |
+| `.sky <name\|next\|off\|list>` | Change the sky |
+| `.weather <server\|clear\|rain\|storm\|snow> [0-100]` | Change the weather |
+| `.time <sunrise\|noon\|sunset\|midnight\|HH:MM\|cycle [speed]\|server>` | Change the time |
+| `.strike` | Lightning strike nearby |
+| `.profile <name>` | Load a profile |
+| `.gg` | Send your Auto GG message |
+| `.menu` | Open the menu |
 
 ### Load it automatically (Tampermonkey)
 
@@ -28,7 +50,7 @@ Install the Tampermonkey extension, create a new script, and paste:
 
 ```js
 // ==UserScript==
-// @name         Miniblox Sky
+// @name         Sky Client
 // @match        https://miniblox.io/*
 // @run-at       document-idle
 // @grant        none
@@ -36,7 +58,7 @@ Install the Tampermonkey extension, create a new script, and paste:
 fetch("https://raw.githubusercontent.com/lttlgrl/Miniblox.io-Sky-API/main/gui.js").then(r => r.text()).then(eval);
 ```
 
-The menu also exposes `SkyGUI.open()`, `SkyGUI.close()` and `SkyGUI.toggle()`.
+The client also exposes `SkyClient.open()`, `.close()`, `.toggle()`, `.setModEnabled(id, on)`, `.runCommand("weather storm")`, `.captureSky(1024)` and `.modules` (each module has `id`, `tab`, `name`, `defaults`, `settings` and optional `enable` / `disable` / `frame` / `change` hooks), so modules can be moved into another client. `SkyGUI` still works as an alias.
 
 ---
 
