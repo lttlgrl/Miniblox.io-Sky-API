@@ -1,0 +1,23 @@
+{
+  "name": "Tokyo V2",
+  "type": "cube",
+  "faces": [
+    "px.webp",
+    "nx.webp",
+    "py.webp",
+    "ny.webp",
+    "pz.webp",
+    "nz.webp"
+  ],
+  "preview": "preview.webp",
+  "credit": "Tokyo resource pack by Yari",
+  "options": {
+    "fogColor": [
+      0.278,
+      0.278,
+      0.278
+    ],
+    "hideStars": true,
+    "dayNight": false
+  }
+}

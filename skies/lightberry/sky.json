@@ -1,0 +1,23 @@
+{
+  "name": "Lightberry",
+  "type": "cube",
+  "faces": [
+    "px.webp",
+    "nx.webp",
+    "py.webp",
+    "ny.webp",
+    "pz.webp",
+    "nz.webp"
+  ],
+  "preview": "preview.webp",
+  "credit": "Lightberry resource pack by Ohmqr",
+  "options": {
+    "fogColor": [
+      0.358,
+      0.423,
+      0.649
+    ],
+    "hideStars": true,
+    "dayNight": false
+  }
+}
