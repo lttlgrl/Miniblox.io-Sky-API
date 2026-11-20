@@ -9,7 +9,13 @@ The Atmospheric Sky API provides access to Miniblox's atmospheric sky renderer, 
 
 ## Getting Started
 
-After loading the [API,](https://raw.githubusercontent.com/lttlgrl/Miniblox.io-Sky-API/refs/heads/main/installation.js) a global `SkyAPI` object becomes available.
+Open miniblox.io, press **F12** (or **Ctrl+Shift+J**) to open the console, and paste:
+
+```js
+fetch("https://raw.githubusercontent.com/lttlgrl/Miniblox.io-Sky-API/main/installation.js").then(r => r.text()).then(eval);
+```
+
+After loading the [API](https://raw.githubusercontent.com/lttlgrl/Miniblox.io-Sky-API/refs/heads/main/installation.js), a global `SkyAPI` object becomes available. Running the loader again is safe; it reuses the loaded API.
 
 ```js
 console.log(SkyAPI);
