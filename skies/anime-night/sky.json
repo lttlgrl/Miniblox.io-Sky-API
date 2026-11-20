@@ -14,9 +14,9 @@
   "license": "CC0 (Poly Haven); moon texture: NASA SVS (public domain)",
   "options": {
     "fogColor": [
-      0.2,
-      0.175,
-      0.501
+      0.199,
+      0.173,
+      0.498
     ],
     "dayNight": false,
     "hideStars": true,
