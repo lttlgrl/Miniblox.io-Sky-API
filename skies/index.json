@@ -1,0 +1,42 @@
+[
+  {
+    "id": "black",
+    "name": "Black",
+    "preview": "black/preview.webp"
+  },
+  {
+    "id": "red",
+    "name": "Red",
+    "preview": "red/preview.webp"
+  },
+  {
+    "id": "antarctica",
+    "name": "Antarctica",
+    "preview": "antarctica/preview.webp"
+  },
+  {
+    "id": "tokyo-dark",
+    "name": "Tokyo Dark",
+    "preview": "tokyo-dark/preview.webp"
+  },
+  {
+    "id": "tokyo-light",
+    "name": "Tokyo Light",
+    "preview": "tokyo-light/preview.webp"
+  },
+  {
+    "id": "midnight",
+    "name": "Midnight",
+    "preview": "midnight/preview.webp"
+  },
+  {
+    "id": "moonrise",
+    "name": "Moonrise",
+    "preview": "moonrise/preview.webp"
+  },
+  {
+    "id": "anime-night",
+    "name": "Anime Night",
+    "preview": "anime-night/preview.webp"
+  }
+]

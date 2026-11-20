@@ -1,0 +1,26 @@
+{
+  "name": "Red",
+  "type": "cube",
+  "faces": [
+    "px.webp",
+    "nx.webp",
+    "py.webp",
+    "ny.webp",
+    "pz.webp",
+    "nz.webp"
+  ],
+  "preview": "preview.webp",
+  "source": "https://polyhaven.com/a/rogland_clear_night",
+  "license": "CC0 (Poly Haven); moon texture: NASA SVS (public domain)",
+  "options": {
+    "fogColor": [
+      0.26,
+      0.012,
+      0.019
+    ],
+    "dayNight": false,
+    "hideStars": true,
+    "hideMoon": true,
+    "hideSun": true
+  }
+}
