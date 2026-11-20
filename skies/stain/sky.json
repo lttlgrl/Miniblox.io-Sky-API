@@ -1,0 +1,23 @@
+{
+  "name": "Stain",
+  "type": "cube",
+  "faces": [
+    "px.webp",
+    "nx.webp",
+    "py.webp",
+    "ny.webp",
+    "pz.webp",
+    "nz.webp"
+  ],
+  "preview": "preview.webp",
+  "credit": "Stain resource pack",
+  "options": {
+    "fogColor": [
+      0.061,
+      0.022,
+      0.063
+    ],
+    "hideStars": true,
+    "dayNight": false
+  }
+}
