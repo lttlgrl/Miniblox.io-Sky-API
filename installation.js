@@ -477,6 +477,7 @@ void main() {
                 input.type = "file";
                 input.accept = "image/*";
                 input.multiple = true;
+                input.addEventListener("cancel", () => reject(new Error("No files picked")));
                 input.onchange = async () => {
                     try {
                         const files = [...input.files];
