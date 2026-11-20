@@ -292,8 +292,10 @@ void main() {
         if (o.hideMoon && sky.sun.moon) sky.sun.moon.visible = false;
         if (o.hideStars && gameScene.stars?.stars) gameScene.stars.stars.visible = false;
         if (o.hideClouds && gameScene.clouds?.mesh) gameScene.clouds.mesh.visible = false;
-        if (o.fogColor && gameScene.scene.fog)
-            gameScene.scene.fog.color.setRGB(o.fogColor[0], o.fogColor[1], o.fogColor[2]);
+        if (o.fogColor) {
+            if (sky.color && sky.color.setRGB) sky.color.setRGB(o.fogColor[0], o.fogColor[1], o.fogColor[2]);
+            if (gameScene.scene.fog) gameScene.scene.fog.color.setRGB(o.fogColor[0], o.fogColor[1], o.fogColor[2]);
+        }
     }
 
     function hookSkyUpdate() {
