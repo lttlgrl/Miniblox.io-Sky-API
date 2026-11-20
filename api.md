@@ -7,6 +7,39 @@ The Atmospheric Sky API provides access to Miniblox's atmospheric sky renderer, 
 
 ---
 
+## In-Game Menu (easiest)
+
+Open miniblox.io, press **Ctrl+Shift+J** to open the console, and paste:
+
+```js
+fetch("https://raw.githubusercontent.com/lttlgrl/Miniblox.io-Sky-API/main/gui.js").then(r => r.text()).then(eval);
+```
+
+- Press **Right Shift** (or click the sky button in the bottom-right corner while your mouse is free) to open the menu.
+- Click a sky to apply it, or **Upload your own** (1 panorama or 6 cube faces).
+- The switch at the top turns the custom sky on and off.
+- Settings: quality, always / night only, brightness, rotation, spin speed, dim at night, night brightness, match fog, and hide sun / moon / stars / clouds.
+- Your sky and settings are saved and come back automatically next time you load the menu.
+- Change the menu key at the bottom of the menu.
+
+### Load it automatically (Tampermonkey)
+
+Install the Tampermonkey extension, create a new script, and paste:
+
+```js
+// ==UserScript==
+// @name         Miniblox Sky
+// @match        https://miniblox.io/*
+// @run-at       document-idle
+// @grant        none
+// ==/UserScript==
+fetch("https://raw.githubusercontent.com/lttlgrl/Miniblox.io-Sky-API/main/gui.js").then(r => r.text()).then(eval);
+```
+
+The menu also exposes `SkyGUI.open()`, `SkyGUI.close()` and `SkyGUI.toggle()`.
+
+---
+
 ## Getting Started
 
 Open miniblox.io, press **F12** (or **Ctrl+Shift+J**) to open the console, and paste:
