@@ -591,8 +591,8 @@
             const st = S(this), s = G.gameScene.sun;
             s.sun.scale.set(sunState.orig.sun * st.sunSize, sunState.orig.sun * st.sunSize, 1);
             s.moon.scale.set(sunState.orig.moon * st.moonSize, sunState.orig.moon * st.moonSize, 1);
-            s.sun.material.color.setRGB(...hexToRgb(st.sunColor));
-            s.moon.material.color.setRGB(...hexToRgb(st.moonColor));
+            s.sun.material.color.set(st.sunColor);
+            s.moon.material.color.set(st.moonColor);
             for (const w of ["sun", "moon"]) {
                 const t = sunState.tex[w];
                 if (t && s[w].material.map !== t) { s[w].material.map = t; s[w].material.needsUpdate = true; }
@@ -641,9 +641,9 @@
         },
         frame() {
             const c = G.gameScene.clouds, s = S(this);
-            c._dayColor.setRGB(...hexToRgb(s.dayColor));
-            c._nightColor.setRGB(...hexToRgb(s.nightColor));
-            c._sunsetColor.setRGB(...hexToRgb(s.sunsetColor));
+            c._dayColor.set(s.dayColor);
+            c._nightColor.set(s.nightColor);
+            c._sunsetColor.set(s.sunsetColor);
         }
     });
 
@@ -666,10 +666,9 @@
                 f.near = far * s.start;
                 f.far = Math.max(f.near + 1, far * s.end);
                 if (s.custom) {
-                    const c = hexToRgb(s.color);
-                    f.color.setRGB(c[0], c[1], c[2]);
+                    f.color.set(s.color);
                     const sc = G.gameScene.sky.color;
-                    if (sc && sc.setRGB) sc.setRGB(c[0], c[1], c[2]);
+                    if (sc && sc.set) sc.set(s.color);
                 }
             });
         },
@@ -945,7 +944,7 @@
             if (!m) return;
             if (!breakState.orig) breakState.orig = { color: m.color.getHex(), opacity: m.opacity, transparent: m.transparent };
             const s = S(this);
-            m.color.setRGB(...hexToRgb(s.color));
+            m.color.set(s.color);
             m.opacity = s.opacity;
             m.transparent = true;
         },
