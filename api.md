@@ -221,7 +221,118 @@ SkyAPI.patchVertex(
 
 ---
 
+## Custom Skyboxes
+
+Replace the sky with your own images. The skybox follows the camera, the sun, moon, stars and clouds still render on top, and it dims at night so the day/night cycle still reads. It works with **Atmospheric Sky ON or OFF**.
+
+> Images must come from a host that allows CORS (GitHub raw, imgur and most CDNs do), or be a data URL / local file.
+
+### `SkyAPI.setSkybox(faces, options?)`
+
+Six-face cube skybox. Face order is the same as Three.js `CubeTextureLoader`:
+`[px, nx, py, ny, pz, nz]` = `[right, left, top, bottom, front, back]`.
+Each face can be a URL, data URL, `File`/`Blob`, `<img>` or `<canvas>`.
+
+```js
+await SkyAPI.setSkybox([
+    "https://example.com/sky/px.png",
+    "https://example.com/sky/nx.png",
+    "https://example.com/sky/py.png",
+    "https://example.com/sky/ny.png",
+    "https://example.com/sky/pz.png",
+    "https://example.com/sky/nz.png"
+]);
+
+// or with named faces
+await SkyAPI.setSkybox({ px, nx, py, ny, pz, nz });
+```
+
+---
+
+### `SkyAPI.setPanorama(source, options?)`
+
+A single 360° equirectangular image (2:1, like most HDRI / "360 sky" images).
+
+```js
+await SkyAPI.setPanorama("https://example.com/sky_360.jpg");
+```
+
+---
+
+### `SkyAPI.pickSkyboxFiles(options?)`
+
+Opens a file picker so you can use images from your computer.
+Pick **1 image** for a panorama, or **6 images** for a cube. Files named `px/nx/py/ny/pz/nz`, `right/left/top/bottom/front/back` or `posx/negx/...` are sorted automatically; otherwise they're used in the order picked.
+
+```js
+SkyAPI.pickSkyboxFiles();
+```
+
+---
+
+### `SkyAPI.setSkyboxOptions(options)`
+
+Change skybox settings at any time. All options can also be passed as the second argument to `setSkybox` / `setPanorama` / `pickSkyboxFiles`.
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `rotation` | `0` | Rotation around the vertical axis, in degrees |
+| `rotationSpeed` | `0` | Degrees per second (slowly spinning sky) |
+| `brightness` | `1` | Brightness multiplier |
+| `tint` | `[1, 1, 1]` | RGB color multiplier (0–1) |
+| `dayNight` | `true` | Dim the skybox at night |
+| `nightBrightness` | `0.25` | Brightness at midnight when `dayNight` is on |
+| `blend` | `"always"` | `"always"` replaces the sky; `"night"` keeps the normal sky by day and fades the skybox in at night (great for star/galaxy skyboxes) |
+| `hideSun` | `false` | Hide the sun sprite |
+| `hideMoon` | `false` | Hide the moon sprite |
+| `hideStars` | `false` | Hide the game's stars |
+| `hideClouds` | `false` | Hide the clouds |
+| `fogColor` | `null` | `[r, g, b]` (0–1) to override fog so distant terrain blends into your skybox |
+
+```js
+SkyAPI.setSkyboxOptions({ rotationSpeed: 1, hideStars: true });
+SkyAPI.setSkyboxOptions({ blend: "night" });
+```
+
+---
+
+### `SkyAPI.removeSkybox()`
+
+Removes the custom skybox and gives the game its normal sky back.
+
+```js
+SkyAPI.removeSkybox();
+```
+
+---
+
+### `SkyAPI.skybox` / `SkyAPI.skyboxOptions`
+
+The skybox Three.js mesh (or `null` before one is set) and the live options object.
+
+---
+
+### Built-in skybox: Galaxy (`skyboxes/galaxy.js`)
+
+A procedurally generated nebula + Milky Way + star field. No images needed: it's drawn in your browser in under a second. Load `installation.js` first, then [`skyboxes/galaxy.js`](skyboxes/galaxy.js).
+
+```js
+SkyboxGalaxy.apply();                                  // default "cosmic" galaxy
+SkyboxGalaxy.apply({ seed: 42 });                      // a different galaxy
+SkyboxGalaxy.apply({ hue: "warm" });                   // "cosmic" | "warm" | "ice" | "toxic"
+SkyboxGalaxy.apply({ nebula: 1.5, stars: 2 });         // stronger clouds, more stars
+SkyboxGalaxy.apply({}, { blend: "night" });            // galaxy only at night
+SkyboxGalaxy.apply({}, { rotationSpeed: 0.5 });        // slowly turning sky
+
+const faces = SkyboxGalaxy.generate({ seed: 7, size: 2048 });
+SkyboxGalaxy.download(faces);                          // save px.png ... nz.png
+```
+
+---
+
 ## Uniforms
+
+> **Note:** the game recomputes these uniforms every frame (from the time of day, weather and altitude), so values you set with `setZenith`, `setDayFactor`, etc. only last one frame unless you set them again each frame. Shader edits (`replaceFragmentShader`, `patchFragment`, ...) do persist.
 
 Uniforms can also be modified directly.
 
@@ -257,12 +368,14 @@ SkyAPI.setDayFactor(1);
 - ✅ Patch shaders at runtime
 - ✅ Modify sun direction
 - ✅ Modify sky colors
+- ✅ Custom six-face skyboxes
+- ✅ 360° panorama skyboxes
+- ✅ Skyboxes work with Atmospheric Sky ON and OFF
 
 ---
 
 ## Planned Features
 
-- ⏳ Custom six-face skyboxes
 - ⏳ Automatic Atmospheric Sky detection
 - ⏳ Legacy Sky support (Atmospheric Sky OFF)
 - ⏳ Dynamic fog coloring
