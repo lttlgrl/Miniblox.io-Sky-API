@@ -209,3 +209,5 @@ const SkyboxGalaxy = (() => {
         }
     };
 })();
+
+window.SkyboxGalaxy = SkyboxGalaxy;

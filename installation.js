@@ -5,6 +5,9 @@ const SkyAPI = (() => {
     if (!game)
         throw new Error("Miniblox game not found.");
 
+    if (window.SkyAPI && window.SkyAPI.game === game && window.SkyAPI.loadPreset)
+        return window.SkyAPI;
+
     const PRESET_BASE = "https://raw.githubusercontent.com/lttlgrl/Miniblox.io-Sky-API/main/skies/";
 
     const gameScene = game.gameScene;
@@ -548,3 +551,5 @@ void main() {
         }
     };
 })();
+
+window.SkyAPI = SkyAPI;
