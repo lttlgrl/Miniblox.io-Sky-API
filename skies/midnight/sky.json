@@ -1,0 +1,24 @@
+{
+  "name": "Midnight",
+  "type": "cube",
+  "faces": [
+    "px.webp",
+    "nx.webp",
+    "py.webp",
+    "ny.webp",
+    "pz.webp",
+    "nz.webp"
+  ],
+  "preview": "preview.webp",
+  "source": "https://polyhaven.com/a/kloppenheim_02_puresky",
+  "license": "CC0 (Poly Haven)",
+  "options": {
+    "fogColor": [
+      0.149,
+      0.228,
+      0.44
+    ],
+    "dayNight": false,
+    "hideStars": true
+  }
+}

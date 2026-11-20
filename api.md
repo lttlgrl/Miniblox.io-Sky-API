@@ -221,6 +221,91 @@ SkyAPI.patchVertex(
 
 ---
 
+## Sky Presets
+
+Ready-made skies live in the [`skies/`](skies) folder and load with one line.
+
+```js
+await SkyAPI.loadPreset("black");
+```
+
+| Preset | Look |
+|--------|------|
+| `black` | Black & white night, giant moon, mountain silhouettes |
+| `red` | Blood-red night, red moon, rocky desert |
+| `antarctica` | Endless snow plain, icy blue sky |
+| `tokyo-dark` | Neon city skyline at night |
+| `tokyo-light` | Pastel city skyline |
+| `midnight` | Deep blue starry sky |
+| `moonrise` | Blue-hour sky with a rising moon |
+| `anime-night` | Purple anime-style night, bright moon |
+
+### `SkyAPI.listPresets()`
+
+Returns every preset with its name and a preview image URL.
+
+```js
+const presets = await SkyAPI.listPresets();
+// [{ id: "black", name: "Black", preview: "https://..." }, ...]
+```
+
+### `SkyAPI.loadPreset(id, settings?)`
+
+Loads a preset. Each preset brings its own options (fog color, hidden sun/moon, etc.).
+
+| Setting | Description |
+|---------|-------------|
+| `size` | Max face size in pixels. Presets are 2048px; use `1024` or `512` on weaker devices |
+| `options` | Override any skybox option, e.g. `{ rotationSpeed: 1 }` |
+
+```js
+await SkyAPI.loadPreset("tokyo-dark", { size: 1024 });
+await SkyAPI.loadPreset("antarctica", { options: { hideClouds: true } });
+```
+
+### `SkyAPI.loadSkyPack(url, settings?)`
+
+Loads a sky pack from any folder URL (must allow CORS, e.g. GitHub raw).
+
+```js
+await SkyAPI.loadSkyPack("https://raw.githubusercontent.com/you/your-repo/main/my-sky/");
+```
+
+### `SkyAPI.currentPreset`
+
+The id (or URL) of the loaded preset, or `null`.
+
+---
+
+## Sky Pack Format
+
+A sky pack is a folder with a `sky.json` and its images:
+
+```
+my-sky/
+  sky.json
+  px.webp  nx.webp  py.webp  ny.webp  pz.webp  nz.webp
+  preview.webp
+```
+
+```json
+{
+  "name": "My Sky",
+  "type": "cube",
+  "faces": ["px.webp", "nx.webp", "py.webp", "ny.webp", "pz.webp", "nz.webp"],
+  "preview": "preview.webp",
+  "license": "CC0",
+  "options": { "dayNight": false, "hideStars": true, "fogColor": [0.1, 0.1, 0.12] }
+}
+```
+
+- **Cube:** `"type": "cube"` with six square faces in the order right, left, top, bottom, front, back.
+- **Panorama:** `"type": "panorama"` with `"image": "sky.webp"` (a 2:1 360° image).
+- `options` takes anything [`setSkyboxOptions`](#skyapisetskyboxoptionsoptions) accepts.
+- Recommended face size: 2048px (1024px for lighter packs). WebP keeps downloads small.
+
+---
+
 ## Custom Skyboxes
 
 Replace the sky with your own images. The skybox follows the camera, the sun, moon, stars and clouds still render on top, and it dims at night so the day/night cycle still reads. It works with **Atmospheric Sky ON or OFF**.
@@ -371,6 +456,7 @@ SkyAPI.setDayFactor(1);
 - ✅ Custom six-face skyboxes
 - ✅ 360° panorama skyboxes
 - ✅ Skyboxes work with Atmospheric Sky ON and OFF
+- ✅ Sky presets and sky packs
 
 ---
 
