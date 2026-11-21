@@ -27,7 +27,7 @@ See [api.md](api.md) for the full API and auto-loading with Tampermonkey.
 
 ## Sky Credits
 
-Preset skies are built from CC0 HDRIs by [Poly Haven](https://polyhaven.com) and the public-domain [NASA SVS CGI Moon Kit](https://svs.gsfc.nasa.gov/4720). Each preset's `sky.json` lists its source.
+Preset skies are built from CC0 HDRIs by [Poly Haven](https://polyhaven.com). Each preset's `sky.json` lists its source.
 
 Resource-pack skies, credited to their packs and makers:
 - **Grunge**: GRUNGE pack

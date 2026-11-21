@@ -292,14 +292,14 @@ await SkyAPI.loadPreset("black");
 
 | Preset | Look |
 |--------|------|
-| `black` | Black & white night, giant moon, mountain silhouettes |
-| `red` | Blood-red night, red moon, rocky desert |
+| `black` | Black & white night, streaky clouds, mountain silhouettes |
+| `red` | Blood-red starry night, rocky desert |
 | `antarctica` | Endless snow plain, icy blue sky |
 | `tokyo-dark` | Neon city skyline at night |
 | `tokyo-light` | Pastel city skyline |
 | `midnight` | Deep blue starry sky |
 | `moonrise` | Blue-hour sky with a rising moon |
-| `anime-night` | Purple anime-style night, bright moon |
+| `anime-night` | Purple anime-style night with glowing clouds |
 | `grunge` | Dark sky with pink clouds |
 | `bluey-night` | Soft pink nebula with stars |
 | `lightberry` | Anime-style power lines under a blue night sky |

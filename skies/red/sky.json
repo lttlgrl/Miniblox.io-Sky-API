@@ -11,11 +11,11 @@
   ],
   "preview": "preview.webp",
   "source": "https://polyhaven.com/a/rogland_clear_night",
-  "license": "CC0 (Poly Haven); moon texture: NASA SVS (public domain)",
+  "license": "CC0 (Poly Haven)",
   "options": {
     "fogColor": [
-      0.26,
-      0.012,
+      0.254,
+      0.011,
       0.019
     ],
     "dayNight": false,

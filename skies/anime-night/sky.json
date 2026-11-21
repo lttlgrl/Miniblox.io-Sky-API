@@ -11,10 +11,10 @@
   ],
   "preview": "preview.webp",
   "source": "https://polyhaven.com/a/kloppenheim_07_puresky",
-  "license": "CC0 (Poly Haven); moon texture: NASA SVS (public domain)",
+  "license": "CC0 (Poly Haven)",
   "options": {
     "fogColor": [
-      0.199,
+      0.198,
       0.173,
       0.498
     ],
