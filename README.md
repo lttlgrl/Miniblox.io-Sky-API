@@ -43,4 +43,4 @@ Resource-pack skies, credited to their packs and makers:
 
 If you use this project in your own Miniblox mod / script, attribution is appreciated:
 
-Created by trust ❤️
+vibecoding genius ❤️
